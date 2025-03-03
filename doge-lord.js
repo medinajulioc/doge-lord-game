@@ -1,6 +1,5 @@
 const output = document.getElementById('output');
 const buttonsContainer = document.getElementById('buttons');
-const commandInput = document.getElementById('command');
 
 const agencies = [
 	{ name: "Transportation", inefficiency: 60, reforms: [] },
@@ -8,131 +7,146 @@ const agencies = [
 	{ name: "Defense", inefficiency: 50, reforms: [] }
 ];
 const strategies = ["Process Reengineering", "Technology Upgrade", "Staff Training"];
-let player = { turn: 1, money: 500, political: 100, manpower: 100 };
+let player = { turn: 1, money: 500, political: 100, manpower: 100, maxTurns: 30 };
 
-// Append text to output
 function appendOutput(text) {
 	output.innerHTML += `<p>${text}</p>`;
 	output.scrollTop = output.scrollHeight;
 }
 
-// Update player stats
 function updateStats() {
 	document.getElementById('turn').textContent = player.turn;
 	document.getElementById('money').textContent = player.money;
 	document.getElementById('political').textContent = player.political;
 	document.getElementById('manpower').textContent = player.manpower;
+	document.getElementById('inefficiency').textContent = totalInefficiency();
 }
 
-// Create a button with accessibility
-function createButton(text, onClick) {
+function totalInefficiency() {
+	return agencies.reduce((sum, agency) => sum + agency.inefficiency, 0);
+}
+
+function createButton(text, onClick, className = '') {
 	const button = document.createElement('button');
-	button.className = 'retro-button';
+	button.className = `retro-button ${className}`;
 	button.textContent = text;
 	button.onclick = onClick;
 	button.setAttribute('aria-label', text);
 	return button;
 }
 
-// Clear buttons
 function clearButtons() {
 	buttonsContainer.innerHTML = '';
+	buttonsContainer.style.display = 'none';
 }
 
-// Show main buttons
+function showButtons(buttons) {
+	clearButtons();
+	buttonsContainer.style.display = 'flex';
+	buttons.forEach(([text, callback, className]) => buttonsContainer.appendChild(createButton(text, callback, className)));
+}
+
 function showMainButtons() {
-	clearButtons();
-	buttonsContainer.appendChild(createButton('View Agencies', showViewAgencies));
-	buttonsContainer.appendChild(createButton('Reform Agency', showReformAgency));
-	buttonsContainer.appendChild(createButton('Manage Resources', showManageResources));
-	buttonsContainer.appendChild(createButton('End Turn', endTurn));
-	buttonsContainer.appendChild(createButton('Help', showHelp));
+	showButtons([
+		["View Agencies", showViewAgencies],
+		["Reform Agency", showReformAgency],
+		["Manage Resources", showManageResources],
+		["End Turn", endTurn, 'end-turn-button']
+	]);
 }
 
-// Sub-menu: View Agencies
 function showViewAgencies() {
-	clearButtons();
-	agencies.forEach((agency, index) => {
-		buttonsContainer.appendChild(createButton(agency.name, () => viewAgency(index)));
-	});
-	buttonsContainer.appendChild(createButton('Back', showMainButtons));
+	showButtons(agencies.map((agency, index) => [agency.name, () => viewAgency(index)]).concat([["Back", showMainButtons]]));
 }
 
-// Sub-menu: Reform Agency
 function showReformAgency() {
-	clearButtons();
-	agencies.forEach((agency, index) => {
-		buttonsContainer.appendChild(createButton(agency.name, () => reformAgency(index)));
-	});
-	buttonsContainer.appendChild(createButton('Back', showMainButtons));
+	showButtons(agencies.map((agency, index) => [agency.name, () => reformAgency(index)]).concat([["Back", showMainButtons]]));
 }
 
-// Sub-menu: Manage Resources
 function showManageResources() {
-	clearButtons();
-	buttonsContainer.appendChild(createButton('Hire Consultants', () => {
-		player.money -= 50;
-		player.manpower += 20;
-		appendOutput('Hired consultants: -50 Money, +20 Manpower');
-		updateStats();
-		showMainButtons();
-	}));
-	buttonsContainer.appendChild(createButton('Back', showMainButtons));
+	showButtons([
+		["Hire Consultants (50M -> 20MP)", () => {
+			if (player.money >= 50) {
+				player.money -= 50;
+				player.manpower += 20;
+				appendOutput('Hired consultants: -50 Money, +20 Manpower.');
+				updateStats();
+			} else {
+				appendOutput('Not enough Money (50 needed).');
+			}
+			showMainButtons();
+		}],
+		["Back", showMainButtons]
+	]);
 }
 
-// Action: View agency details
 function viewAgency(index) {
 	const agency = agencies[index];
-	appendOutput(`Agency: ${agency.name}\nInefficiency: ${agency.inefficiency}\nReforms: ${agency.reforms.join(', ') || 'None'}`);
+	appendOutput(`Agency: ${agency.name}\nInefficiency: ${agency.inefficiency}\nReforms: ${agency.reforms.join(', ') || 'None'}.`);
 	showMainButtons();
 }
 
-// Action: Reform agency
 function reformAgency(index) {
-	clearButtons();
-	strategies.forEach((strategy) => {
-		buttonsContainer.appendChild(createButton(strategy, () => {
-			agencies[index].reforms.push(strategy);
-			agencies[index].inefficiency -= 10; // Simplified effect
-			appendOutput(`Applied ${strategy} to ${agencies[index].name}. Inefficiency reduced.`);
-			updateStats();
+	showButtons(strategies.map(strategy => [
+		strategy,
+		() => {
+			if (player.money >= 100 && player.political >= 20 && player.manpower >= 50) {
+				player.money -= 100;
+				player.political -= 20;
+				player.manpower -= 50;
+				agencies[index].reforms.push(strategy);
+				agencies[index].inefficiency -= 10;
+				appendOutput(`Applied ${strategy} to ${agencies[index].name}. Inefficiency reduced by 10.`);
+				updateStats();
+			} else {
+				appendOutput('Insufficient resources (100M, 20P, 50MP needed).');
+			}
 			showMainButtons();
-		}));
-	});
-	buttonsContainer.appendChild(createButton('Back', showReformAgency));
+		}
+	]).concat([["Back", showReformAgency]]));
 }
 
-// Action: End turn
 function endTurn() {
 	player.turn++;
 	appendOutput(`Turn ${player.turn} begins.`);
+	if (Math.random() < 0.2) {
+		const events = [
+			"Budget Cut! -50 Money.",
+			"Elon Tweets! +20 Political.",
+			"Worker Strike! -30 Manpower."
+		];
+		const event = events[Math.floor(Math.random() * events.length)];
+		if (event.includes("-50 Money")) player.money = Math.max(0, player.money - 50);
+		else if (event.includes("+20 Political")) player.political += 20;
+		else if (event.includes("-30 Manpower")) player.manpower = Math.max(0, player.manpower - 30);
+		appendOutput(event);
+	}
+	updateStats();
+	if (totalInefficiency() < 100) {
+		appendOutput("Victory! Inefficiency below 100. You’re the DOGE Lord! 🇺🇸");
+		showGameOver();
+	} else if (player.turn > player.maxTurns) {
+		appendOutput("Game Over! Too many turns. Try again!");
+		showGameOver();
+	} else {
+		showMainButtons();
+	}
+}
+
+function showGameOver() {
+	clearButtons();
+	buttonsContainer.style.display = 'flex';
+	buttonsContainer.appendChild(createButton('Play Again', restartGame));
+}
+
+function restartGame() {
+	agencies.forEach(a => { a.inefficiency = [60, 75, 50][agencies.indexOf(a)]; a.reforms = []; });
+	player = { turn: 1, money: 500, political: 100, manpower: 100, maxTurns: 30 };
+	output.innerHTML = 'Welcome to DOGE Lord! Reduce inefficiency below 100 in 30 turns.';
 	updateStats();
 	showMainButtons();
 }
 
-// Action: Show help
-function showHelp() {
-	appendOutput('Commands:\n- View Agencies: View agency details\n- Reform Agency: Apply strategies\n- Manage Resources: Adjust resources\n- End Turn: Advance to next turn');
-	showMainButtons();
-}
-
-// Handle text input (optional)
-commandInput.addEventListener('keypress', (e) => {
-	if (e.key === 'Enter') {
-		const cmd = commandInput.value.trim().toLowerCase();
-		commandInput.value = '';
-		if (cmd.startsWith('view')) {
-			const index = parseInt(cmd.split(' ')[1]) - 1;
-			if (index >= 0 && index < agencies.length) viewAgency(index);
-			else appendOutput('Invalid agency number.');
-		} else if (cmd === 'end') {
-			endTurn();
-		} else {
-			appendOutput('Invalid command.');
-		}
-	}
-});
-
-// Initialize interface
-showMainButtons();
+// Initialize
 updateStats();
+showMainButtons();

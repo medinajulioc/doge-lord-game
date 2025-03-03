@@ -5,44 +5,28 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>DOGE Lord</title>
 	<link rel="stylesheet" href="doge-lord.css">
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-8Y536QBPZE"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-8Y536QBPZE');
-</script>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8Y536QBPZE"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-8Y536QBPZE');
-</script>
-	
 </head>
 <body>
 	<header>
-		<h1>DOGE Lord</h1>
-		<p>Turn: <span id="turn">1</span> | Money: <span id="money">500</span> | Political: <span id="political">100</span> | Manpower: <span id="manpower">100</span></p>
+		<div class="menu-bar">
+			<span>DOGE Lord, Day <span id="turn">1</span> of 30</span>
+			<span id="stats">
+				<span class="positive">Money: <span id="money">500</span></span> |
+				<span class="positive">Political: <span id="political">100</span></span> |
+				<span class="positive">Manpower: <span id="manpower">100</span></span> |
+				<span class="negative">Inefficiency: <span id="inefficiency">185</span></span>
+			</span>
+		</div>
 	</header>
-	<div id="game-area">
-		<div id="output">
-			Welcome to DOGE Lord! Your goal is to reduce total inefficiency below 100 within 30 turns.<br>
-			Start by viewing an agency's status or using the buttons below.
-		</div>
-		<div id="input-area">
-			<input type="text" id="command" placeholder="Type command (e.g., view 1)">
-		</div>
+	<main>
+		<div id="output">Welcome to DOGE Lord! Reduce inefficiency below 100 in 30 turns. Use buttons below!</div>
 		<div id="buttons"></div>
-	</div>
+	</main>
 	<footer>
-		<p>🇺🇸 Proud to be an American and support DOGE! Share this game!</p>
-		<p>Made with 💚 by grok and <a href="https://x.com/juliomedina">@juliomedina</a></p>
-		<p>Disclaimer: Not affiliated with DOGE, just a proud American patriot.</p>
+		<button class="retro-button" onclick="showViewAgencies()">View Agencies</button>
+		<button class="retro-button" onclick="showReformAgency()">Reform Agency</button>
+		<button class="retro-button" onclick="showManageResources()">Manage Resources</button>
+		<button class="retro-button end-turn-button" onclick="endTurn()">End Turn</button>
 	</footer>
 	<script src="doge-lord.js"></script>
 </body>
