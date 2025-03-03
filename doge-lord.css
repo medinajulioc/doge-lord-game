@@ -37,11 +37,21 @@ main {
 	font-family: 'Courier New', monospace;
 	font-size: 16px;
 	cursor: pointer;
+	transition: background 0.3s, color 0.3s;
 }
 
 .retro-button:hover {
 	background: #0f0;
 	color: #000;
+}
+
+.retro-button:active {
+	animation: flicker 0.1s;
+}
+
+@keyframes flicker {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.7; }
 }
 
 footer {
@@ -55,4 +65,5 @@ footer {
 		font-size: 18px;
 		padding: 10px 20px;
 	}
+	header, #output { font-size: 14px; }
 }

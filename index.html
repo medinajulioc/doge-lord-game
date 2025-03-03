@@ -5,7 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>DOGE Lord</title>
 	<link rel="stylesheet" href="doge-lord.css">
-	<script src="https://brython.info/src/brython_dist.js"></script>
 </head>
 <body>
 	<header>
@@ -13,7 +12,7 @@
 		<p>Turn: <span id="turn">1</span> | Money: <span id="money">500</span> | Political: <span id="political">100</span> | Manpower: <span id="manpower">100</span> | Inefficiency: <span id="inefficiency">185</span></p>
 	</header>
 	<main>
-		<div id="output">Welcome to DOGE Lord! Reduce total inefficiency below 100 in 30 turns. Choose an action below.</div>
+		<div id="output">Welcome to DOGE Lord! Reduce inefficiency below 100 in 30 turns. Choose an action below.</div>
 		<div id="buttons"></div>
 	</main>
 	<footer>
@@ -21,7 +20,7 @@
 		<p>Made with 💚 by grok and <a href="https://x.com/juliomedina">@juliomedina</a></p>
 		<p>Not affiliated with DOGE—just a patriotic meme game!</p>
 	</footer>
-	<script type="text/python" src="doge-lord.py"></script>
-	<script>brython();</script>
+	<script src="doge-lord.js"></script>
+	<audio id="beep" src="https://www.myinstants.com/media/sounds/doge-bark.mp3" preload="auto"></audio>
 </body>
 </html>
