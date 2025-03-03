@@ -51,7 +51,10 @@ function createButton(text, onClick, className = '') {
     const button = document.createElement('button');
     button.className = `retro-button ${className}`;
     button.textContent = text;
-    button.onclick = onClick;
+    button.onclick = () => {
+        onClick();
+        trackEvent('button_click', text);
+    };
     button.setAttribute('aria-label', text);
     return button;
 }
@@ -78,10 +81,12 @@ function showMainButtons() {
 
 function showViewAgencies() {
     showButtons(agencies.map((agency, index) => [agency.name, () => viewAgency(index)]).concat([["Back", showMainButtons]]));
+    trackEvent('view_action', 'View Agencies');
 }
 
 function showReformAgency() {
     showButtons(agencies.map((agency, index) => [agency.name, () => reformAgency(index)]).concat([["Back", showMainButtons]]));
+    trackEvent('view_action', 'Reform Agency');
 }
 
 function showManageResources() {
@@ -92,6 +97,7 @@ function showManageResources() {
                 player.manpower += 20;
                 appendOutput('Hired consultants: -50 Money, +20 Manpower.');
                 updateStats();
+                trackEvent('resource_action', 'Hire Consultants');
             } else {
                 appendOutput('Not enough Money (50 needed).');
             }
@@ -99,11 +105,13 @@ function showManageResources() {
         }],
         ["Back", showMainButtons]
     ]);
+    trackEvent('view_action', 'Manage Resources');
 }
 
 function viewAgency(index) {
     const agency = agencies[index];
     appendOutput(`Agency: ${agency.name}\nInefficiency: ${agency.inefficiency}\nReforms: ${agency.reforms.join(', ') || 'None'}.`);
+    trackEvent('game_action', `View ${agency.name}`);
     showMainButtons();
 }
 
@@ -119,12 +127,14 @@ function reformAgency(index) {
                 agencies[index].inefficiency -= 10;
                 appendOutput(`Applied ${strategy} to ${agencies[index].name}. Inefficiency reduced by 10.`);
                 updateStats();
+                trackEvent('game_action', `Reform ${agencies[index].name} with ${strategy}`);
             } else {
                 appendOutput('Insufficient resources (100M, 20P, 50MP needed).');
             }
             showMainButtons();
         }
     ]).concat([["Back", showReformAgency]]));
+    trackEvent('view_action', `Reform ${agencies[index].name}`);
 }
 
 function endTurn() {
@@ -143,12 +153,15 @@ function endTurn() {
         appendOutput(event);
     }
     updateStats();
+    trackEvent('game_action', 'End Turn');
     if (totalInefficiency() < 100) {
         appendOutput("Victory! Inefficiency below 100. You’re the DOGE Lord! 🇺🇸");
         showGameOver();
+        trackEvent('game_outcome', 'Victory');
     } else if (player.turn > player.maxTurns) {
         appendOutput("Game Over! Too many turns. Try again!");
         showGameOver();
+        trackEvent('game_outcome', 'Loss');
     } else {
         showMainButtons();
     }
@@ -157,7 +170,10 @@ function endTurn() {
 function showGameOver() {
     clearButtons();
     buttonsContainer.style.display = 'flex';
-    buttonsContainer.appendChild(createButton('Play Again', restartGame));
+    buttonsContainer.appendChild(createButton('Play Again', () => {
+        restartGame();
+        trackEvent('button_click', 'Play Again');
+    }));
 }
 
 function restartGame() {
@@ -166,8 +182,23 @@ function restartGame() {
     output.innerHTML = 'Welcome to DOGE Lord! Reduce inefficiency below 100 in 30 turns.';
     updateStats();
     showMainButtons();
+    trackEvent('game_action', 'Restart');
+}
+
+// Google Analytics tracking function
+function trackEvent(eventName, eventParameter) {
+    if (window.gtag) {
+        gtag('event', eventName, {
+            event_category: 'DOGE Lord',
+            event_label: eventParameter,
+            value: 1
+        });
+    } else {
+        console.log(`Tracking event: ${eventName} - ${eventParameter}`);
+    }
 }
 
 // Initialize
 updateStats();
 showMainButtons();
+trackEvent('page_view', 'DOGE Lord Game');
