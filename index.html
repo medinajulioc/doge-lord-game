@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DOGE Lord</title>
     <link rel="stylesheet" href="doge-lord.css">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8Y536QBPZE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-8Y536QBPZE');
+    </script>
 </head>
 <body>
     <header>
@@ -23,10 +31,10 @@
         <div id="buttons"></div>
     </main>
     <footer>
-        <button class="retro-button" onclick="showViewAgencies()">View Agencies</button>
-        <button class="retro-button" onclick="showReformAgency()">Reform Agency</button>
-        <button class="retro-button" onclick="showManageResources()">Manage Resources</button>
-        <button class="retro-button end-turn-button" onclick="endTurn()">End Turn</button>
+        <button class="retro-button" onclick="showViewAgencies(); trackEvent('button_click', 'View Agencies')">View Agencies</button>
+        <button class="retro-button" onclick="showReformAgency(); trackEvent('button_click', 'Reform Agency')">Reform Agency</button>
+        <button class="retro-button" onclick="showManageResources(); trackEvent('button_click', 'Manage Resources')">Manage Resources</button>
+        <button class="retro-button end-turn-button" onclick="endTurn(); trackEvent('button_click', 'End Turn')">End Turn</button>
     </footer>
     <script src="doge-lord.js"></script>
 </body>
