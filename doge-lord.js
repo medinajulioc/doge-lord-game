@@ -17,10 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	let player = { money: 500, political: 100, manpower: 100, turn: 1 };
 	let currentState = "start_turn";
 	const maxTurns = 30;
+	const quips = ["Much Patriotism, Wow! ⚖️", "To the Moon, Efficiency Lord! 🚀", "Bark Louder Than Red Tape! 💰"];
 
 	function updateOutput(text) {
 		const entry = document.createElement('div');
-		entry.className = 'log-entry';
+		entry.className = 'log-entry typing';
 		const timestamp = document.createElement('span');
 		timestamp.className = 'timestamp';
 		timestamp.textContent = `Turn ${player.turn}: `;
@@ -30,35 +31,37 @@ document.addEventListener('DOMContentLoaded', () => {
 		entry.appendChild(content);
 		output.appendChild(entry);
 		output.scrollTop = output.scrollHeight;
+		setTimeout(() => entry.classList.remove('typing'), 2000); // Remove typing class after animation
 	}
 
 	function updateStatus() {
-		document.getElementById('turn').textContent = player.turn;
-		document.getElementById('money').textContent = player.money;
-		document.getElementById('political').textContent = player.political;
-		document.getElementById('manpower').textContent = player.manpower;
-		document.getElementById('inefficiency').textContent = totalInefficiency();
+		const elements = ['turn', 'money', 'political', 'manpower', 'inefficiency'];
+		elements.forEach(id => {
+			const el = document.getElementById(id);
+			const newValue = player[id] || totalInefficiency();
+			if (el.textContent !== String(newValue)) {
+				el.classList.add('changed');
+				setTimeout(() => el.classList.remove('changed'), 300);
+				el.textContent = newValue;
+			}
+		});
 	}
 
 	function totalInefficiency() {
 		return agencies.reduce((sum, agency) => sum + agency.inefficiency, 0);
 	}
 
-	function playBeep() {
-		beep.currentTime = 0;
-		beep.play().catch(e => console.log("Sound play failed:", e));
-	}
-
-	function playClick() {
-		click.currentTime = 0;
-		click.play().catch(e => console.log("Sound play failed:", e));
-	}
+	function playBeep() { beep.play().catch(e => console.log("Sound play failed:", e)); }
+	function playClick() { click.play().catch(e => console.log("Sound play failed:", e)); }
 
 	function createButton(label, callback, className = '') {
 		const button = document.createElement('button');
 		button.textContent = label;
 		button.className = `retro-button ${className}`;
+		let timeout;
 		button.addEventListener('click', () => {
+			if (timeout) return;
+			timeout = setTimeout(() => timeout = null, 300);
 			playClick();
 			playBeep();
 			callback();
@@ -143,6 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			setState("game_over");
 		} else {
 			updateOutput(`Turn ${player.turn} begins. Keep pushing!`);
+			const quip = random.choice(quips);
+			updateOutput(quip);
 		}
 	}
 
@@ -172,7 +177,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		setState("start_turn");
 	}
 
+	// Utility function for random choice
+	function random(choice) {
+		return choice[Math.floor(Math.random() * choice.length)];
+	}
+
 	// Initialize game
 	updateStatus();
 	setState("start_turn");
+	updateOutput(random.choice(quips));
 });
