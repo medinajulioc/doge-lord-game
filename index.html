@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>DOGE Lord</title>
-	<script src="https://brython.info/src/brython_dist.js"></script>
-	<link rel="stylesheet" href="doge-lord.css">
-	<!-- Google Analytics --> <script async src="https://www.googletagmanager.com/gtag/js?id=G-8Y536QBPZE"></script> </head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOGE Lord</title>
+    <script src="https://brython.info/src/brython_dist.js"></script>
+    <link rel="stylesheet" href="doge-lord.css">
 </head>
 <body onload="brython()">
-	<header>
-		<h1>DOGE Lord</h1>
-		<p>Turn: <span id="turn">1</span> | Money: <span id="money">500</span> | Political Capital: <span id="political">100</span> | Manpower: <span id="manpower">100</span></p>
-	</header>
-	<div id="game">
-		<div id="output">
-			Welcome to DOGE Lord! Reduce total inefficiency below 100 in 30 turns.<br>
-			Commands:<br>
-			- view &lt;number&gt;: View agency details (e.g., view 1)<br>
-			- reform &lt;agency&gt; &lt;strategy&gt;: Apply a strategy<br>
-			- manage &lt;option&gt;: Manage resources<br>
-			- end: End turn<br>
-			Start by typing "view 1" to see an agency’s status.
-		</div>
-		<div id="input-area">
-			<input type="text" id="command" placeholder="Type command (e.g., view 1)">
-		</div>
-	</div>
-	<footer>
-		<p>🇺🇸 Proud to be an American and support DOGE! Share this game!</p>
-		<p>Made with 💚 by grok and <a href="https://x.com/juliomedina">@juliomedina</a></p>
-		<p>Disclaimer: Not affiliated with DOGE, just a proud patriot.</p>
-	</footer>
-	<script type="text/python" src="doge-lord.py"></script>
+    <header>
+        <h1>DOGE Lord</h1>
+        <p>Turn: <span id="turn">1</span> | Money: <span id="money">500</span> | Political Capital: <span id="political">100</span> | Manpower: <span id="manpower">100</span></p>
+    </header>
+    <div id="game-area">
+        <div id="output">
+            Welcome to DOGE Lord! Your goal is to reduce total inefficiency below 100 within 30 turns.<br>
+            <br>
+            How to Play:<br>
+            - Type commands in the input field below and press Enter.<br>
+            - Command examples:<br>
+              • view 1 : View details of agency 1<br>
+              • reform 1 2 : Apply strategy 2 to agency 1<br>
+              • manage 1 : Choose resource option 1<br>
+              • end : End your turn<br>
+            <br>
+            Start by typing a command like "view 1" to see an agency’s status. Good luck!<br>
+            Beware: Unethical strategies raise suspicion, and random events or Elon’s investigations may occur!
+        </div>
+        <div id="input-area">
+            <input type="text" id="command" placeholder="Type command (e.g., view 1)">
+        </div>
+    </div>
+    <footer>
+        <p>🇺🇸 Proud to be an American and support DOGE! Share this game and join the DOGE Lord ranks!</p>
+        <p>Made with 💚 by grok and <a href="https://x.com/juliomedina">@juliomedina</a></p>
+        <p>Disclaimer: Not affiliated with DOGE, just a proud American patriot.</p>
+    </footer>
+    <script type="text/python" src="doge-lord.py"></script>
 </body>
 </html>
