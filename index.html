@@ -4,31 +4,35 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>DOGE Lord</title>
-	<link rel="stylesheet" href="doge-lord.css">
+	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-	<header>
-		<div class="menu-bar">
-			<span>DOGE Lord</span>
-			<span id="status">Turn: <span id="turn">1</span> | Money: <span id="money">500</span> | Political: <span id="political">100</span> | Manpower: <span id="manpower">100</span> | Inefficiency: <span id="inefficiency">185</span></span>
+	<div class="container">
+		<h1>DOGE Lord</h1>
+		<p>Welcome to DOGE Lord! Reduce total inefficiency!</p>
+		<div class="stats">
+			<span><img src="assets/money.png" class="sprite"> Money: <span id="money">500</span></span> |
+			<span><img src="assets/political.png" class="sprite"> Political Capital: <span id="political">100</span></span> |
+			<span><img src="assets/manpower.png" class="sprite"> Manpower: <span id="manpower">100</span></span>
 		</div>
-	</header>
-	<main>
-		<div id="output">Welcome to DOGE Lord! Reduce inefficiency below 100 in 30 turns. Choose an action below.</div>
-		<div id="buttons"></div>
-	</main>
-	<footer>
-		<p>
-		<p style="color: #00FF00; font-family: 'Courier New', monospace; font-size: 12px; text-align: center; margin: 0; padding: 10px; background: #000000; border-top: 0px solid #00FF00;">
-			🇺🇸 Yo, "DOGE Lord" rocks! You’re the DOGE Lord slashing inefficiency to &lt; 100 in 30 turns. Click "View Status," "Manage Resources," "Reform Agencies," or hack/bark with Elon—end your turn for wacky events! Win bigly, share on X with #DOGELord, or laugh off a loss. Much fun, wow! 🚀
-		</p>
-		<p style="color: #00FF00; font-family: 'Courier New', monospace; font-size: 12px; text-align: center; margin: 0; padding: 10px; background: #000000; border-top: 2px solid #00FF00; line-height: 1.4;">
-			Made with 💚 by grok and <a href="https://x.com/juliomedina" style="color: #00FF00; text-decoration: none;">@juliomedina</a> | Not affiliated with DOGE—just patriotic meme madness!
-		</p>
-	</footer>
-	<script src="doge-lord.js"></script>
-	<audio id="beep" src="https://www.myinstants.com/media/sounds/doge-bark.mp3" preload="auto"></audio>
-	<audio id="siren" src="https://www.myinstants.com/media/sounds/police-siren-1.mp3" preload="auto"></audio>
-	<audio id="click" src="https://www.myinstants.com/media/sounds/windows-98-startup-sound-1.mp3" preload="auto"></audio>
+		<div class="commands">
+			<p>Commands:</p>
+			<ul>
+				<li><code>view &lt;number&gt;</code>: View agency details (e.g., <code>view 1</code>)</li>
+				<li><code>reform &lt;agency&gt; &lt;strategy&gt;</code>: Apply a strategy</li>
+				<li><code>manage &lt;option&gt;</code>: Manage resources</li>
+				<li><code>end</code>: End turn</li>
+				<li><code>leaderboard</code>: Show top scores</li>
+			</ul>
+			<p>Start by typing '<code>view 1</code>' to see an agency’s status.</p>
+		</div>
+		<input type="text" id="commandInput" placeholder="Enter command here">
+		<div id="output"></div>
+		<div id="leaderboard" class="leaderboard"></div>
+		<footer>
+			<img src="assets/flag.png" class="sprite"> Proud to be an American and support DOGE! Share this game!
+		</footer>
+	</div>
+	<script src="script.js"></script>
 </body>
 </html>
